@@ -342,8 +342,8 @@ def udp_listener():
                                 print(f"[Force Offset ERROR] {e}")
                         elif ARJ21_K8 == 1:
                             try:
-                                force_manager.set_force_scale("Elevator", 50)
-                                force_manager.set_force_scale("Rudder", 20)
+                                #force_manager.set_force_scale("Elevator", 50)
+                                #force_manager.set_force_scale("Rudder", 20)
                                 damp_ctrl.set_damp("Elevator", [1, 10])
                                 spring_ctrl.set_pmoveback("Elevator", 280)
                                 friction_ctrl.set_friction("Elevator", 0.05)
@@ -362,6 +362,8 @@ def udp_listener():
                                 AxisBitmask.Rudder.name   : FO_rud + aeroz
                             }
                         elif ARJ21_K8 == 1:
+                            force_manager.set_force_scale("Elevator", 5 + abs(aerox) * 65 / 3000)
+                            force_manager.set_force_scale("Rudder",  10 + abs(aeroz) * 40 / 1500)
                             areo_dict = {
                                 AxisBitmask.Elevator.name : FO_ele + aerox,
                                 AxisBitmask.Aileron.name  : FO_ail + aeroy,
