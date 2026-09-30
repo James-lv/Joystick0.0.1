@@ -347,7 +347,7 @@ def udp_listener():
                                 damp_ctrl.set_damp("Elevator", [1, 10])
                                 spring_ctrl.set_pmoveback("Elevator", 280)
                                 friction_ctrl.set_friction("Elevator", 0.05)
-                                damp_ctrl.set_damp("Rudder", [1, 2])
+                                damp_ctrl.set_damp("Rudder", [1, 10])
                                 friction_ctrl.set_friction("Rudder", 5)
                             except Exception as e:
                                 print(f"[Force Offset ERROR] {e}")
