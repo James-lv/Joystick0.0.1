@@ -101,12 +101,13 @@ class PitchSignalGenerator:
         # ====================================================
 
         if self.mode == 2:
-            pulse_period = 2.0
-            cycle_time = t % pulse_period
-            if cycle_time < 1.0:
-                output = AMPLITUDE
+            if t < 1.0:
+              output = 0.0
+            elif t < 2.0:
+                output = 0.6
             else:
                 output = 0.0
+            
 
         # ====================================================
         # Mode 3£º±¶Âö³å
@@ -118,14 +119,27 @@ class PitchSignalGenerator:
         # ====================================================
 
         elif self.mode == 3:
-            if t < 1.0:
-                output = AMPLITUDE
-            elif t < 2.0:
-                output = 0.0
-            elif t < 3.0:
-                output = -AMPLITUDE
-            else:
-                output = 0.0
+             if t < 1.0:
+                 output = 0.0
+             
+             elif t < 2.0:
+                 # 0 -> +0.5
+                 output = AMPLITUDE * (t - 1.0)
+             
+             elif t < 3.0:
+                 # +0.5 -> 0
+                 output = AMPLITUDE * (3.0 - t)
+             
+             elif t < 4.0:
+                 # 0 -> -0.5
+                 output = -AMPLITUDE * (t - 3.0)
+             
+             elif t < 5.0:
+                 # -0.5 -> 0
+                 output = -AMPLITUDE * (5.0 - t)
+             
+             else:
+                 output = 0.0
 
         # ====================================================
         # Mode 4£ºÉ¨Æµ
