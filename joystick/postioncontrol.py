@@ -78,8 +78,9 @@ class PositionControl:
         self.move_axis_to_position(Axis.Aileron, -aileron_pos)
         self.move_axis_to_position(Axis.Rudder, -rudder_pos)
         #return self.read_pos_classs()
-    #-----------------picth+pos------------------------
-    def set_target_p_position(self, elevator_pos):
+
+    # ------------------- pitch+pos -------------------
+    def set_target_p_position(self,axis, elevator_pos):
         """Set Elevator, Aileron, Rudder positions (-1.0..1.0)."""
         self.move_axis_to_position(Axis.Elevator, -elevator_pos)
-        #return self.read_pos_classs()
+    #return self.read_pos_classs()

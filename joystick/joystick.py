@@ -1,4 +1,6 @@
 
+
+
 #!/usr/bin/env python3
 import os
 import sys
@@ -342,12 +344,12 @@ def udp_listener():
                                 print(f"[Force Offset ERROR] {e}")
                         elif ARJ21_K8 == 1:
                             try:
-                                #force_manager.set_force_scale("Elevator", 50)
-                                #force_manager.set_force_scale("Rudder", 20)
+                                force_manager.set_force_scale("Elevator", 50)
+                                force_manager.set_force_scale("Rudder", 20)
                                 damp_ctrl.set_damp("Elevator", [1, 10])
                                 spring_ctrl.set_pmoveback("Elevator", 280)
                                 friction_ctrl.set_friction("Elevator", 0.05)
-                                damp_ctrl.set_damp("Rudder", [1, 10])
+                                damp_ctrl.set_damp("Rudder", [1, 2])
                                 friction_ctrl.set_friction("Rudder", 5)
                             except Exception as e:
                                 print(f"[Force Offset ERROR] {e}")
@@ -362,8 +364,6 @@ def udp_listener():
                                 AxisBitmask.Rudder.name   : FO_rud + aeroz
                             }
                         elif ARJ21_K8 == 1:
-                            force_manager.set_force_scale("Elevator", 5 + abs(aerox) * 65 / 3000)
-                            force_manager.set_force_scale("Rudder",  10 + abs(aeroz) * 40 / 1500)
                             areo_dict = {
                                 AxisBitmask.Elevator.name : FO_ele + aerox,
                                 AxisBitmask.Aileron.name  : FO_ail + aeroy,
@@ -388,9 +388,12 @@ threading.Thread(target=udp_listener, daemon=True).start()
 def udp_force_profile_listener_bin():
     udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_sock.bind((UDP_IP_EJ, UDP_PORT_EJ))
+
+    udp_sock.settimeout(0.01)
    # print(f"[INFO] Listening Force Profile UDP (binary) on port {edit_joystick_PORT}")
 
     AXIS_MAP = {1: "Elevator", 2: "Aileron", 3: "Rudder"}
+    AXIS_BITMASK_MAP = {1: AxisBitmask.Elevator,2: AxisBitmask.Aileron,3: AxisBitmask.Rudder}
     TORQUE_LIMITS = {"Elevator": 6.7, "Aileron": 6.7, "Rudder": 130.0}
      
     AXIS_FACTORS = {
@@ -398,23 +401,41 @@ def udp_force_profile_listener_bin():
         "Aileron":  {"k": 1 / 0.0092, "m": 0.04, "friction_factor": 0.0225},
         "Rudder":   {"k": 228,        "m": 1,    "friction_factor": 0.013},
     }
-    
+    last_hmi_test_enable = -1
+    hmi_test_enable = 0
     while True:
         try:
             # 更新 fmt 格式字符串
             fmt = "<B b B b 9f 9f 9f 9f i f i i i i f f i"
             expected_len = struct.calcsize(fmt)
 
-            data, addr = udp_sock.recvfrom(8192)
+            #data, addr = udp_sock.recvfrom(8192)
+            try:
+                data, addr = udp_sock.recvfrom(8192)
+            
+            except socket.timeout:
+                if hmi_test_enable in (2, 3, 4, 5, 6):
+                    pitch_test_position = pitch_signal_generator.get_output()
+            
+                    pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+            
+                    print(
+                        f"[MAIN] mode={hmi_test_enable}, "
+                        f"position={pitch_test_position:.6f}"
+                    )
+            
+                continue
             if len(data) < expected_len:
                 print(f"[WARN] Data length too short: {len(data)}")
                 continue
 
             unpacked = struct.unpack(fmt, data[:expected_len])
-            #print("packet_in:", data.hex())
+            print("packet_in:", data.hex())
 
             axis_id = unpacked[1]
             axis_name = AXIS_MAP.get(axis_id)
+            axis_bitmask = AXIS_BITMASK_MAP.get(axis_id)
+
             if not axis_name:
                 print(f"[WARN] Unknown axis_id: {axis_id}")
                 continue
@@ -435,17 +456,17 @@ def udp_force_profile_listener_bin():
       
 
 
-            positions_pos  = list(v * k for v in unpacked[4:13])
-            positions_neg  = list(v * k for v in unpacked[13:22])
-            pos_values     = list(v * m for v in unpacked[22:31])
-            neg_values     = list(v * m for v in unpacked[31:40])
-            scale_val      = unpacked[40]
-            friction_val   = unpacked[41] * friction_factor
-            targettor      = unpacked[42]
-            spring_value   = unpacked[43]
-            damp_value     = [unpacked[44], unpacked[45]]
-            axrange_val    = [int(unpacked[46]), int(unpacked[47])] 
-            forceoff       = unpacked[48]
+            positions_pos    = list(v * k for v in unpacked[4:13])
+            positions_neg    = list(v * k for v in unpacked[13:22])
+            pos_values       = list(v * m for v in unpacked[22:31])
+            neg_values       = list(v * m for v in unpacked[31:40])
+            scale_val        = unpacked[40]
+            friction_val     = unpacked[41] * friction_factor
+            targettor        = unpacked[42]
+            spring_value     = unpacked[43]
+            damp_value       = [unpacked[44], unpacked[45]]
+            axrange_val      = [int(unpacked[46]), int(unpacked[47])] 
+            forceoff         = unpacked[48]
 
 
 
@@ -471,12 +492,11 @@ def udp_force_profile_listener_bin():
             tartorque_ctrl.set_target_torque(axis_name, targettor_vl)
             forceoffset_ctrl.set_force_offset(axis_name, forceoff)
 
-
             
             with open(CONFIG_PATH, "w", encoding="utf-8") as f:
                 json.dump(cfg, f, indent=4, ensure_ascii=False)
 
-            #print(f"✅ {axis_name} updated via UDP from {addr}")
+            print(f"✅ {axis_name} updated via UDP from {addr}")
 
             # ===================== 接收置零信号 =====================
             zero_flag = unpacked[2]                       
@@ -484,24 +504,26 @@ def udp_force_profile_listener_bin():
             #print(f"[INFO] zero_flag at index 42: {hmi_shake_enable}")
             #print(f"[INFO] zero_flag at index 41: {zero_flag}")
             #print(f"[INFO] zero_flag at index 43: {hmi_position_enable}")
-
+            print(f"hmi_test_enable = {unpacked[3]}")
             # ===================== HMI TEST 控制 =====================
-            # HMI Test 模式 # # 0 = OFF # 1 = 抖杆 # 2 = 脉冲 # 3 = 倍脉冲 # 4 = 扫频 # 5 = 正弦 # 6 = 阶跃
+            
+           # HMI Test 模式 # # 0 = OFF # 1 = 抖杆 # 2 = 脉冲 # 3 = 倍脉冲 # 4 = 扫频 # 5 = 正弦 # 6 = 阶跃
+            
             match hmi_test_enable:            
                 case 0:
                     # ================= OFF =================
                     stickshaker.disable()           
                     # 停止信号发生器
-                    pitch_signal_generator.reset()            
+                    pitch_signal_generator.stop()            
                     # 关闭俯仰位置控制
-                    pos_contr.enable_pos_contr_class(AxisBitmask.Elevator, False)           
+                    pos_contr.enable_pos_contr_class(axis_bitmask, 0)           
                     # 目标位置恢复 0
-                    pos_contr.set_target_p_position(0.0)            
+                    pos_contr.move_axis_to_position(axis_bitmask,0.0)            
                 case 1:
                     # ================= 抖杆 =================           
                     # 关闭位置测试
-                    pitch_signal_generator.reset()            
-                    pos_contr.enable_pos_contr_class(AxisBitmask.Elevator,False)            
+                    pitch_signal_generator.stop()            
+                    pos_contr.enable_pos_contr_class(axis_bitmask,0)            
                     # 启用抖杆震动控制
                     shake_force_in = 200.0
                     shake_freq_in = 10.0            
@@ -510,57 +532,134 @@ def udp_force_profile_listener_bin():
                     stickshaker.set_force(F, Q)
                     stickshaker.enable()            
                 case 2:
-                    # ================= 脉冲 =================            
-                    # 只在进入该模式时启动一次
-                    if last_hmi_test_enable != 2:            
-                        stickshaker.disable()            
-                        pitch_signal_generator.start(2)           
-                        # 开启俯仰位置控制
-                        pos_contr.enable_pos_contr_class(AxisBitmask.Elevator,True)           
-                    # 每个控制周期都更新
-                    pitch_test_position = pitch_signal_generator.update()           
-                    # 将测试信号作为俯仰目标位置
-                    pos_contr.set_target_p_position(pitch_test_position)
-            
+                    # ================= 脉冲 =================
+               
+                    # 仅在进入模式2时启动一次
+                    if last_hmi_test_enable != 2:
+               
+                        stickshaker.disable()
+               
+                        pitch_signal_generator.start(2)
+               
+                        pos_contr.enable_pos_contr_class(axis_bitmask, 1)
+               
+                        print("[PULSE] Mode 2 started")
+               
+                    # 每个控制周期更新
+                    pitch_test_position = pitch_signal_generator.get_output()
+                    print(
+                            f"[MAIN] mode={hmi_test_enable}, "
+                            f"position={pitch_test_position:.6f}")
+                    # 测试结束后，update()返回0，不自动重启
+                    pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+               
+                    
+                 
+               
+               
                 case 3:
-                    # ================= 倍脉冲 =================           
-                    if last_hmi_test_enable != 3:            
-                        stickshaker.disable()           
-                        pitch_signal_generator.start(3)            
-                        pos_contr.enable_pos_contr_class(AxisBitmask.Elevator,True)            
-                    # 每个周期更新
-                    pitch_test_position = pitch_signal_generator.update()            
-                    pos_contr.set_target_p_position(pitch_test_position)
-            
+                    # ================= 倍脉冲 =================
+               
+                    if last_hmi_test_enable != 3:
+               
+                        stickshaker.disable()
+               
+                        pitch_signal_generator.start(3)
+               
+                        pos_contr.enable_pos_contr_class(axis_bitmask, 1)
+               
+                        print("[PULSE] Mode 3 started")
+               
+                    pitch_test_position = pitch_signal_generator.get_output()
+               
+                    pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+               
+                    print(
+                        f"[DOUBLE PULSE] mode={pitch_signal_generator.mode}, "
+                        f"running={pitch_signal_generator.running}, "
+                        f"output={pitch_test_position:.6f}"
+                    )
+               
+               
                 case 4:
                     # ================= 扫频 =================
-                    if last_hmi_test_enable != 4:            
-                        stickshaker.disable()            
-                        pitch_signal_generator.start(4)           
-                        pos_contr.enable_pos_contr_class( AxisBitmask.Elevator, True)            
-                    # 每个周期更新
-                    pitch_test_position = pitch_signal_generator.update()            
-                    pos_contr.set_target_p_position(pitch_test_position)            
+               
+                    if last_hmi_test_enable != 4:
+               
+                        stickshaker.disable()
+               
+                        pitch_signal_generator.start(4)
+               
+                        pos_contr.enable_pos_contr_class(axis_bitmask, 1)
+               
+                        print("[SWEEP] Mode 4 started")
+               
+                    pitch_test_position = pitch_signal_generator.get_output()
+               
+                    pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+               
+                    print(
+                        f"[SWEEP] mode={pitch_signal_generator.mode}, "
+                        f"running={pitch_signal_generator.running}, "
+                        f"output={pitch_test_position:.6f}"
+                    )
+               
+               
                 case 5:
-                    # ================= 正弦 =================           
-                    if last_hmi_test_enable != 5:           
-                        stickshaker.disable()            
-                        pitch_signal_generator.start(5)           
-                        pos_contr.enable_pos_contr_class(AxisBitmask.Elevator,True)
-                    # 每个周期更新
-                    pitch_test_position = pitch_signal_generator.update()           
-                    pos_contr.set_target_p_position(pitch_test_position)          
+                    # ================= 正弦 =================
+               
+                    if last_hmi_test_enable != 5:
+               
+                        stickshaker.disable()
+               
+                        pitch_signal_generator.start(5)
+               
+                        pos_contr.enable_pos_contr_class(axis_bitmask, 1)
+               
+                        print("[SINE] Mode 5 started")
+               
+                    pitch_test_position = pitch_signal_generator.get_output()
+               
+                    pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+
+                    print(
+                        f"[SINE] mode={pitch_signal_generator.mode}, "
+                        f"running={pitch_signal_generator.running}, "
+                        f"output={pitch_test_position:.6f}"
+                    )
+               
+               
                 case 6:
-                    # ================= 阶跃 =================           
-                    if last_hmi_test_enable != 6:            
-                        stickshaker.disable()            
-                        pitch_signal_generator.start(6)            
-                        pos_contr.enable_pos_contr_class(AxisBitmask.Elevator,True)
-                    # 每个周期更新
-                    pitch_test_position = pitch_signal_generator.update()
-                    pos_contr.set_target_p_position(pitch_test_position)  
+                    # ================= 阶跃 =================
+               
+                    if last_hmi_test_enable != 6:
+               
+                        stickshaker.disable()
+               
+                        pitch_signal_generator.start(6)
+               
+                        pos_contr.enable_pos_contr_class(axis_bitmask, 1)
+               
+                        print("[STEP] Mode 6 started")
+               
+                    pitch_test_position = pitch_signal_generator.get_output()
+               
+                    pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+               
+                    print(
+                        f"[STEP] mode={pitch_signal_generator.mode}, "
+                        f"running={pitch_signal_generator.running}, "
+                        f"output={pitch_test_position:.6f}"
+                    )
             # 保存当前模式
             last_hmi_test_enable = hmi_test_enable
+            # 收到 UDP 包后立即更新一次位置
+            if hmi_test_enable in (2, 3, 4, 5, 6):
+                pitch_test_position = pitch_signal_generator.get_output()
+                 
+                pos_contr.move_axis_to_position(axis_bitmask,pitch_test_position)
+
+               
 
             if zero_flag:
                 # 获取主循环里的原始值
@@ -626,7 +725,7 @@ try:
             packet_out = struct.pack("<iffffffff", buttons_value, elevator, aileron, rudder, brake_left, brake_right,force_p/GlobalState.w,force_r,force_y)
             #print("packet_out:", packet_out.hex())
             #print("length:", len(packet_out))
-            packet_out_edit_joystick = struct.pack("ffff", ele, force_p/GlobalState.w, ail, force_r)
+            packet_out_edit_joystick = struct.pack("ffffff", ele, force_p/GlobalState.w, ail, force_r,rud,force_y)
                            
 
             #packet_out_edit_joystick = struct.pack("ffffff", ele, force_p*2, ail, force_r, rud, force_y)
