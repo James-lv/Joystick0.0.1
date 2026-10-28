@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "joystick", "joystick\joystick.pyproj", "{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "stickshaker", "stickshaker\stickshaker.pyproj", "{680D9F58-4497-4141-8A83-8348F2CA35B6}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "position_control", "position_control\position_control.pyproj", "{27E57347-8403-4FAB-922C-D6153AA4AC68}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "read_buttons", "read_buttons\read_buttons.pyproj", "{E9A587C5-8BF1-4B21-80C7-DE23A46643B8}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "read_position", "read_position\read_position.pyproj", "{A2B5F415-BB0B-4AB4-8A46-071E065E5F2F}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "pos_contr_class", "pos_contr_class\pos_contr_class.pyproj", "{01D6C4EE-4016-42E6-9CC8-8698A1655507}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "read_button_class", "read_button_class\read_button_class.pyproj", "{82B18E48-56F5-4C94-8004-F1161738382F}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "read_pos_class", "read_pos_class\read_pos_class.pyproj", "{2A2C34CE-12B0-4F1F-BC14-6806222BDB58}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "stickshaker_class", "stickshaker_class\stickshaker_class.pyproj", "{82A5319A-0A36-4D60-9A2E-365C979C61CD}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "read_pos", "read_pos\read_pos.pyproj", "{6B212235-9731-4065-A8F1-2D1F1F4BFCF4}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "stick", "stick\stick.pyproj", "{9ECD811A-9EBB-41AF-8177-BDE307CFDC9F}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "force_offset", "force_offset\force_offset.pyproj", "{19F884BE-2237-4D6B-BEBF-905B47AC9046}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "force set", "force set\force set.pyproj", "{A23D7D13-E6EF-4169-BF5A-2491191116D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{680D9F58-4497-4141-8A83-8348F2CA35B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{680D9F58-4497-4141-8A83-8348F2CA35B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27E57347-8403-4FAB-922C-D6153AA4AC68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27E57347-8403-4FAB-922C-D6153AA4AC68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9A587C5-8BF1-4B21-80C7-DE23A46643B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9A587C5-8BF1-4B21-80C7-DE23A46643B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B5F415-BB0B-4AB4-8A46-071E065E5F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B5F415-BB0B-4AB4-8A46-071E065E5F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D6C4EE-4016-42E6-9CC8-8698A1655507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D6C4EE-4016-42E6-9CC8-8698A1655507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82B18E48-56F5-4C94-8004-F1161738382F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82B18E48-56F5-4C94-8004-F1161738382F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2C34CE-12B0-4F1F-BC14-6806222BDB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2C34CE-12B0-4F1F-BC14-6806222BDB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A5319A-0A36-4D60-9A2E-365C979C61CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A5319A-0A36-4D60-9A2E-365C979C61CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B212235-9731-4065-A8F1-2D1F1F4BFCF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B212235-9731-4065-A8F1-2D1F1F4BFCF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ECD811A-9EBB-41AF-8177-BDE307CFDC9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ECD811A-9EBB-41AF-8177-BDE307CFDC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F884BE-2237-4D6B-BEBF-905B47AC9046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F884BE-2237-4D6B-BEBF-905B47AC9046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23D7D13-E6EF-4169-BF5A-2491191116D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23D7D13-E6EF-4169-BF5A-2491191116D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0EB8246-EBBB-4D91-B5BF-34C8DA41595A}
+	EndGlobalSection
+EndGlobal
