@@ -332,6 +332,11 @@ def udp_listener():
                         if ARJ21_K8 == 0:
                             try:
                                 for axis_name in ["Elevator", "Aileron", "Rudder"]:
+                                    pos_values = force_profile_cfg.get(f"{axis_name}_positive", [0.0]*9)
+                                    neg_values = force_profile_cfg.get(f"{axis_name}_negative", [0.0]*9)
+                                    pos_positions = force_profile_cfg.get(f"{axis_name}_pos_position", [i*250 for i in range(1,10)])
+                                    neg_positions = force_profile_cfg.get(f"{axis_name}_neg_position", [i*250 for i in range(1,10)])
+                                    force_manager.set_force_profile(axis_name, pos_values, neg_values, pos_positions, neg_positions)
                                     scale = int(scaling_cfg.get(axis_name, 100))
                                     force_manager.set_force_scale(axis_name, scale)
                                     friction_val = float(friction_cfg.get(axis_name, 0.1))
@@ -344,13 +349,19 @@ def udp_listener():
                                 print(f"[Force Offset ERROR] {e}")
                         elif ARJ21_K8 == 1:
                             try:
+                                for axis_name in ["Elevator", "Aileron", "Rudder"]:
+                                    pos_values = [0.0]*9
+                                    neg_values = [0.0]*9
+                                    pos_positions = force_profile_cfg.get(f"{axis_name}_pos_position", [i*250 for i in range(1,10)])
+                                    neg_positions = force_profile_cfg.get(f"{axis_name}_neg_position", [i*250 for i in range(1,10)])
+                                    force_manager.set_force_profile(axis_name, pos_values, neg_values, pos_positions, neg_positions)
                                 force_manager.set_force_scale("Elevator", 50)
-                                force_manager.set_force_scale("Rudder", 20)
+                                force_manager.set_force_scale("Rudder", 50)
                                 damp_ctrl.set_damp("Elevator", [1, 10])
-                                spring_ctrl.set_pmoveback("Elevator", 280)
-                                friction_ctrl.set_friction("Elevator", 0.05)
+                                spring_ctrl.set_pmoveback("Elevator", 50)
+                                friction_ctrl.set_friction("Elevator", 1)
                                 damp_ctrl.set_damp("Rudder", [1, 2])
-                                friction_ctrl.set_friction("Rudder", 5)
+                                friction_ctrl.set_friction("Rudder", 8)
                             except Exception as e:
                                 print(f"[Force Offset ERROR] {e}")
                         last_ARJ21_K8 = ARJ21_K8

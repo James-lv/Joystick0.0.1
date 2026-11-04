@@ -41,7 +41,7 @@ class PositionControl:
         packet_speed = struct.pack('<IIIH', 0xCE, axis_mask, SETTING_AUTOPILOT_SPEED, 1000)
         self.sock.sendto(packet_speed, (self.HOST, self.PORT))
 
-    # ------------------- ºËÐÄ¹¦ÄÜ -------------------
+    # ------------------- æ ¸å¿ƒåŠŸèƒ½ -------------------
     def enable_pos_contr_class(self, axis,Value):
         """Enable/disable position control."""
         packet_enable = struct.pack('<IIIB', 0xCE, axis, SETTING_AUTOPILOT_ENABLE ,Value)
@@ -64,14 +64,14 @@ class PositionControl:
     #    self.sock.sendto(query, (self.HOST, self.PORT))
     #    try:
     #        data,_= self.sock.recvfrom(8192)
-    #        # Ã¿¸öÖá·µ»Ø: 1B node + 4B float
+    #        # Ã¿ï¿½ï¿½ï¿½á·µï¿½ï¿½: 1B node + 4B float
     #        length, status, node_pitch, pos_pitch, node_roll, pos_roll,node_yaw, pos_yaw = struct.unpack('<HBHfHfHf', data)
     #        print("length:", len(data))
-    #        return {'pitch': -pos_pitch, 'roll': pos_roll, 'yaw': pos_yaw}  # ·µ»Ø [(node, pos), ...]£¬Ë³Ðò Elevator, Aileron, Rudder
+    #        return {'pitch': -pos_pitch, 'roll': pos_roll, 'yaw': pos_yaw}  # ï¿½ï¿½ï¿½ï¿½ [(node, pos), ...]ï¿½ï¿½Ë³ï¿½ï¿½ Elevator, Aileron, Rudder
     #    except Exception as e:
     #        print("Failed to parse position response:", e)
     #        return None
-    # ------------------- ¸ß¼¶½Ó¿Ú -------------------
+    # ------------------- é«˜çº§æŽ¥å£ -------------------
     def set_target_positions(self, elevator_pos, aileron_pos, rudder_pos):
         """Set Elevator, Aileron, Rudder positions (-1.0..1.0)."""
         self.move_axis_to_position(Axis.Elevator, -elevator_pos)

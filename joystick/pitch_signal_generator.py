@@ -217,7 +217,7 @@ import time
 import math
 import threading
 
-TEST_DURATION = 6.0
+TEST_DURATION = 8.0
 AMPLITUDE = 0.5
 
 SINE_FREQUENCY = 0.5
