@@ -219,23 +219,246 @@ import threading
 
 TEST_DURATION = 8.0
 AMPLITUDE = 0.5
-
 SINE_FREQUENCY = 0.5
 SWEEP_START_FREQUENCY = 0.1
 SWEEP_END_FREQUENCY = 1.0
 
 
+#class PitchSignalGenerator:
+#
+#    def __init__(self):
+#        self.mode = 0
+#        self.start_time = 0.0
+#        self.phase = 0.0
+#        self.running = False
+#
+#        self.output = 0.0
+#        self.lock = threading.Lock()
+#        self.thread = None
+#
+#    def start(self, mode):
+#
+#        if mode < 2 or mode > 6:
+#            return
+#
+#        self.stop()
+#
+#        with self.lock:
+#            self.mode = mode
+#            self.start_time = time.perf_counter()
+#            self.phase = 0.0
+#            self.output = 0.0
+#            self.running = True
+#
+#        self.thread = threading.Thread(
+#            target=self._run,
+#            daemon=True
+#        )
+#        self.thread.start()
+#
+#    def stop(self):
+#
+#        with self.lock:
+#            self.running = False
+#            self.output = 0.0
+#            self.mode = 0
+#
+#    def get_output(self):
+#        with self.lock:
+#            return self.output
+#
+#    def _run(self):
+#
+#        last_time = time.perf_counter()
+#
+#        while True:
+#
+#            now = time.perf_counter()
+#            dt = now - last_time
+#            last_time = now
+#
+#            with self.lock:
+#
+#                if not self.running:
+#                    break
+#
+#                t = now - self.start_time
+#                mode = self.mode
+#
+#                if t >= TEST_DURATION:
+#                    self.running = False
+#                    self.mode = 0
+#                    self.output = 0.0
+#                    break
+#
+#                # Mode 2：周期脉冲
+#                if mode == 2:
+#                        output = AMPLITUDE 
+#                        if 0.0 <= t < 1.0 :
+#                            output = AMPLITUDE 
+#                        else :
+#                            output=0.0
+#                        print(f"[PULSE] t={t:.3f}, output={output:.3f}")
+#                # Mode 3：正负双脉冲
+#                elif mode == 3:
+#                     if 0.0 <= t < 1.0:
+#        # 0 -> +0.5
+#                        output = AMPLITUDE * t
+#
+#                     elif 1.0 <= t < 2.0:
+#                         # +0.5 -> 0
+#                         output = AMPLITUDE * (2.0 - t)
+#                     
+#                     elif 2.0 <= t < 3.0:
+#                         # 0 -> -0.5
+#                         output = -AMPLITUDE * (t - 2.0)
+#                     
+#                     elif 3.0 <= t < 4.0:
+#                         # -0.5 -> 0
+#                         output = -AMPLITUDE * (4.0 - t)
+#                     
+#                     else:
+#                                output = 0.0
+#                            
+#                # Mode 4：扫频正弦
+#                elif mode == 4:
+#                    frequency = (
+#                        SWEEP_START_FREQUENCY
+#                        + (SWEEP_END_FREQUENCY - SWEEP_START_FREQUENCY)
+#                        * (t / TEST_DURATION)
+#                    )
+#
+#                    self.phase += 2.0 * math.pi * frequency * dt
+#                    output = AMPLITUDE * math.sin(self.phase)
+#
+#                # Mode 5：固定频率正弦
+#                elif mode == 5:
+#                    self.phase += 2.0 * math.pi * SINE_FREQUENCY * dt
+#                    output = AMPLITUDE * math.sin(self.phase)
+#
+#                # Mode 6：阶跃
+#                elif mode == 6:
+#                    output = AMPLITUDE if 1.0 <= t < 5.0 else 0.0
+#
+#                else:
+#                    output = 0.0
+#
+#                self.output = max(-1.0, min(1.0, output))
+#
+#            # 后台更新周期约1ms
+#            time.sleep(0.001)
+
+
+
+import time
+import math
+import threading
+
+
 class PitchSignalGenerator:
 
     def __init__(self):
+
+        # =================================================
+        # 默认测试参数（可由上位机 UDP 动态修改）
+        # =================================================
+
+        self.TEST_DURATION = 8.0
+
+        self.AMPLITUDE = 0.5
+
+        self.SINE_FREQUENCY = 0.5
+
+        self.SWEEP_START_FREQUENCY = 0.1
+
+        self.SWEEP_END_FREQUENCY = 1.0
+
+        # =================================================
+        # 信号发生器状态
+        # =================================================
+
         self.mode = 0
+
         self.start_time = 0.0
+
         self.phase = 0.0
+
         self.running = False
 
         self.output = 0.0
+
         self.lock = threading.Lock()
+
         self.thread = None
+
+    # =====================================================
+    # 更新测试参数（上位机 UDP 调用）
+    # =====================================================
+
+    def update_parameters(
+        self,
+        test_duration=None,
+        amplitude=None,
+        sine_frequency=None,
+        sweep_start_frequency=None,
+        sweep_end_frequency=None
+    ):
+
+        with self.lock:
+
+            # 测试持续时间
+            if test_duration is not None:
+                if 0.1 <= test_duration <= 10.0:
+                    self.TEST_DURATION = float(test_duration)
+
+            # 测试幅值
+            if amplitude is not None:
+                if 0.0 <= amplitude <= 0.8:
+                    self.AMPLITUDE = float(amplitude)
+
+            # 固定正弦频率
+            if sine_frequency is not None:
+                if 0.5 <= sine_frequency <= 1:
+                    self.SINE_FREQUENCY = float(sine_frequency)
+
+            # 扫频起始频率
+            if sweep_start_frequency is not None:
+                if 0.3 <= sweep_start_frequency <= 0.5:
+                    self.SWEEP_START_FREQUENCY = float(sweep_start_frequency)
+
+            # 扫频结束频率
+            if sweep_end_frequency is not None:
+                if 5<= sweep_end_frequency <= 8:
+                    self.SWEEP_END_FREQUENCY = float(sweep_end_frequency)
+
+            print(
+                f"[PITCH PARAM] "
+                f"Duration={self.TEST_DURATION:.2f}s, "
+                f"Amplitude={self.AMPLITUDE:.3f}, "
+                f"Sine={self.SINE_FREQUENCY:.3f}Hz, "
+                f"Sweep={self.SWEEP_START_FREQUENCY:.3f}"
+                f"->{self.SWEEP_END_FREQUENCY:.3f}Hz"
+            )
+
+    # =====================================================
+    # 获取当前参数
+    # =====================================================
+
+    def get_parameters(self):
+
+        with self.lock:
+
+            return {
+                "test_duration": self.TEST_DURATION,
+                "amplitude": self.AMPLITUDE,
+                "sine_frequency": self.SINE_FREQUENCY,
+                "sweep_start_frequency": self.SWEEP_START_FREQUENCY,
+                "sweep_end_frequency": self.SWEEP_END_FREQUENCY
+            }
+
+    # =====================================================
+    # 启动信号发生器
+    # =====================================================
 
     def start(self, mode):
 
@@ -245,28 +468,57 @@ class PitchSignalGenerator:
         self.stop()
 
         with self.lock:
+
             self.mode = mode
+
             self.start_time = time.perf_counter()
+
             self.phase = 0.0
+
             self.output = 0.0
+
             self.running = True
 
         self.thread = threading.Thread(
             target=self._run,
             daemon=True
         )
+
         self.thread.start()
+
+        print(
+            f"[PITCH START] Mode={mode}, "
+            f"Duration={self.TEST_DURATION}, "
+            f"Amplitude={self.AMPLITUDE}"
+        )
+
+    # =====================================================
+    # 停止信号发生器
+    # =====================================================
 
     def stop(self):
 
         with self.lock:
+
             self.running = False
+
             self.output = 0.0
+
             self.mode = 0
 
+    # =====================================================
+    # 获取当前输出
+    # =====================================================
+
     def get_output(self):
+
         with self.lock:
+
             return self.output
+
+    # =====================================================
+    # 后台信号生成线程
+    # =====================================================
 
     def _run(self):
 
@@ -275,7 +527,9 @@ class PitchSignalGenerator:
         while True:
 
             now = time.perf_counter()
+
             dt = now - last_time
+
             last_time = now
 
             with self.lock:
@@ -283,68 +537,116 @@ class PitchSignalGenerator:
                 if not self.running:
                     break
 
+                # 当前测试时间
                 t = now - self.start_time
+
                 mode = self.mode
 
-                if t >= TEST_DURATION:
+                # 获取最新参数
+                duration = self.TEST_DURATION
+
+                amplitude = self.AMPLITUDE
+
+                sine_frequency = self.SINE_FREQUENCY
+
+                sweep_start = self.SWEEP_START_FREQUENCY
+
+                sweep_end = self.SWEEP_END_FREQUENCY
+
+                # =================================================
+                # 测试结束判断
+                # =================================================
+
+                if t >= duration:
+
                     self.running = False
+
                     self.mode = 0
+
                     self.output = 0.0
+
+                    print("[PITCH] Test finished")
+
                     break
 
-                # Mode 2：周期脉冲
-                if mode == 2:
-                        output = AMPLITUDE 
-                        if 0.0 <= t < 1.0 :
-                            output = AMPLITUDE 
-                        else :
-                            output=0.0
-                        print(f"[PULSE] t={t:.3f}, output={output:.3f}")
-                # Mode 3：正负双脉冲
-                elif mode == 3:
-                     if 0.0 <= t < 1.0:
-        # 0 -> +0.5
-                        output = AMPLITUDE * t
+                # =================================================
+                # Mode 2：单脉冲
+                # =================================================
 
-                     elif 1.0 <= t < 2.0:
-                         # +0.5 -> 0
-                         output = AMPLITUDE * (2.0 - t)
-                     
-                     elif 2.0 <= t < 3.0:
-                         # 0 -> -0.5
-                         output = -AMPLITUDE * (t - 2.0)
-                     
-                     elif 3.0 <= t < 4.0:
-                         # -0.5 -> 0
-                         output = -AMPLITUDE * (4.0 - t)
-                     
-                     else:
-                                output = 0.0
-                            
+                if mode == 2:
+
+                    output = amplitude if 0.0 <= t < 1.0 else 0.0
+
+                # =================================================
+                # Mode 3：正负双脉冲
+                # =================================================
+
+                elif mode == 3:
+
+                    if 0.0 <= t < 1.0:
+
+                        output = amplitude * t
+
+                    elif 1.0 <= t < 2.0:
+
+                        output = amplitude * (2.0 - t)
+
+                    elif 2.0 <= t < 3.0:
+
+                        output = -amplitude * (t - 2.0)
+
+                    elif 3.0 <= t < 4.0:
+
+                        output = -amplitude * (4.0 - t)
+
+                    else:
+
+                        output = 0.0
+
+                # =================================================
                 # Mode 4：扫频正弦
+                # =================================================
+
                 elif mode == 4:
+
                     frequency = (
-                        SWEEP_START_FREQUENCY
-                        + (SWEEP_END_FREQUENCY - SWEEP_START_FREQUENCY)
-                        * (t / TEST_DURATION)
+                        sweep_start
+                        + (sweep_end - sweep_start)
+                        * (t / duration)
                     )
 
-                    self.phase += 2.0 * math.pi * frequency * dt
-                    output = AMPLITUDE * math.sin(self.phase)
+                    self.phase += (
+                        2.0 * math.pi * frequency * dt
+                    )
 
+                    output = amplitude * math.sin(self.phase)
+
+                # =================================================
                 # Mode 5：固定频率正弦
-                elif mode == 5:
-                    self.phase += 2.0 * math.pi * SINE_FREQUENCY * dt
-                    output = AMPLITUDE * math.sin(self.phase)
+                # =================================================
 
+                elif mode == 5:
+
+                    self.phase += (
+                        2.0 * math.pi * sine_frequency * dt
+                    )
+
+                    output = amplitude * math.sin(self.phase)
+
+                # =================================================
                 # Mode 6：阶跃
+                # =================================================
+
                 elif mode == 6:
-                    output = AMPLITUDE if 1.0 <= t < 5.0 else 0.0
+
+                    output = amplitude if 1.0 <= t < 5.0 else 0.0
 
                 else:
+
                     output = 0.0
 
+                # 输出限幅
                 self.output = max(-1.0, min(1.0, output))
 
-            # 后台更新周期约1ms
+            # 后台更新周期约 1ms
             time.sleep(0.001)
