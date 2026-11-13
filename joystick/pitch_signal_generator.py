@@ -408,28 +408,23 @@ class PitchSignalGenerator:
 
             # 测试持续时间
             if test_duration is not None:
-                if 0.1 <= test_duration <= 10.0:
-                    self.TEST_DURATION = float(test_duration)
+                self.TEST_DURATION = float(test_duration)
 
             # 测试幅值
             if amplitude is not None:
-                if 0.0 <= amplitude <= 0.8:
-                    self.AMPLITUDE = float(amplitude)
+                self.AMPLITUDE = float(amplitude)
 
             # 固定正弦频率
             if sine_frequency is not None:
-                if 0.5 <= sine_frequency <= 1:
-                    self.SINE_FREQUENCY = float(sine_frequency)
+                self.SINE_FREQUENCY = float(sine_frequency)
 
             # 扫频起始频率
             if sweep_start_frequency is not None:
-                if 0.3 <= sweep_start_frequency <= 0.5:
-                    self.SWEEP_START_FREQUENCY = float(sweep_start_frequency)
+                self.SWEEP_START_FREQUENCY = float(sweep_start_frequency)
 
             # 扫频结束频率
             if sweep_end_frequency is not None:
-                if 5<= sweep_end_frequency <= 8:
-                    self.SWEEP_END_FREQUENCY = float(sweep_end_frequency)
+                self.SWEEP_END_FREQUENCY = float(sweep_end_frequency)
 
             print(
                 f"[PITCH PARAM] "

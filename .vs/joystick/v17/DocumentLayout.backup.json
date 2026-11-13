@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}|joystick\\joystick.pyproj|C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\joystick.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}|joystick\\joystick.pyproj|solutionrelative:joystick\\joystick.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}|joystick\\joystick.pyproj|C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\pitch_signal_generator.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}|joystick\\joystick.pyproj|solutionrelative:joystick\\pitch_signal_generator.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}|joystick\\joystick.pyproj|C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\joystick.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A77EA0F3-B130-4752-A998-2A2FC9F8BC8B}|joystick\\joystick.pyproj|solutionrelative:joystick\\joystick.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,17 +18,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 1609,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "joystick.py",
               "DocumentMoniker": "C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\joystick.py",
               "RelativeDocumentMoniker": "joystick\\joystick.py",
               "ToolTip": "C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\joystick.py",
               "RelativeToolTip": "joystick\\joystick.py",
-              "ViewState": "AgIAANsBAAAAAAAAAAAWwOQBAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAANUBAAAAAAAAAAAWwOcBAAAwAAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHfSURBVDhPpZCxaxNhGMZ/9zVJaUuDUlq1FBWLZBFTCXo4BFyU1qGKi4OkIHhkzF/g0KF00M2lR9YUdDDQQVAcJILoQUd1UNRmkhoRm8RL777v7nOoCZd4AcEH3uF5nvd73vd74X\u002BgtTai3LIsHeWDEEJct217a1DvwbIs7bpubFUqFW3b9naxWLwWfSOipAvHcfqqi0KhkMtms3cty1rsaomeG4FpmoMSANVqlXQ6nQMWgacMC4hOBchduEj\u002ByjKjScGh8SS1Wq3nxQZEN3j1eY/Vrfe8rTeQvsf89ARLS1cz5XIZ/uUGXxptQiVRUhJIybudXaZn52a7vbEBpmkyNb/A69YM9W8tDEJOTI2hpI\u002BSkvOZH2f13sNAB\u002B07sV9wHIdH9Unquz9RvoeUPtL3UFISKkky\u002BAT7HwTi6FpsgGma3N9\u002Bg5I\u002BKaFZyU8wOpJChwHnjiuE9wKCXyC/zsQGOI7DeELjtiUPbgky6Wd/HA3KBelC4AIpNfQGl88cQ0mfI5PugRhKkM2DUk0INYwtPI/dAGAlf4rbl06T6DyBVgeCABJzYPhwcm0V8ICNvwJKpVIf37h3IxSyKVAuBMDIYQAMw1jvaxwGrYNl3Xq5o79vat3Y3Nedj4\u002B11je7/m\u002BXOuyzFtDhUgAAAABJRU5ErkJggg==",
               "WhenOpened": "2026-11-10T08:07:27.883Z",
               "IsPinned": true,
@@ -56,13 +56,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "pitch_signal_generator.py",
               "DocumentMoniker": "C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\pitch_signal_generator.py",
               "RelativeDocumentMoniker": "joystick\\pitch_signal_generator.py",
               "ToolTip": "C:\\Users\\10690\\Desktop\\\u6587\u4EF6\u5939\\CUPRT-2506\\code_joystick\\joystick\\joystick_V\\joysticktest9.8\u002B\u4E0A\u4F4D\u673A\u7248\u672C\\joysticktest9.8\\joystick\\pitch_signal_generator.py",
               "RelativeToolTip": "joystick\\pitch_signal_generator.py",
-              "ViewState": "AgIAAGcCAAAAAAAAAAAWwEECAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAAEgCAAAAAAAAAAAWwEECAAA1AAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHfSURBVDhPpZCxaxNhGMZ/9zVJaUuDUlq1FBWLZBFTCXo4BFyU1qGKi4OkIHhkzF/g0KF00M2lR9YUdDDQQVAcJILoQUd1UNRmkhoRm8RL777v7nOoCZd4AcEH3uF5nvd73vd74X\u002BgtTai3LIsHeWDEEJct217a1DvwbIs7bpubFUqFW3b9naxWLwWfSOipAvHcfqqi0KhkMtms3cty1rsaomeG4FpmoMSANVqlXQ6nQMWgacMC4hOBchduEj\u002ByjKjScGh8SS1Wq3nxQZEN3j1eY/Vrfe8rTeQvsf89ARLS1cz5XIZ/uUGXxptQiVRUhJIybudXaZn52a7vbEBpmkyNb/A69YM9W8tDEJOTI2hpI\u002BSkvOZH2f13sNAB\u002B07sV9wHIdH9Unquz9RvoeUPtL3UFISKkky\u002BAT7HwTi6FpsgGma3N9\u002Bg5I\u002BKaFZyU8wOpJChwHnjiuE9wKCXyC/zsQGOI7DeELjtiUPbgky6Wd/HA3KBelC4AIpNfQGl88cQ0mfI5PugRhKkM2DUk0INYwtPI/dAGAlf4rbl06T6DyBVgeCABJzYPhwcm0V8ICNvwJKpVIf37h3IxSyKVAuBMDIYQAMw1jvaxwGrYNl3Xq5o79vat3Y3Nedj4\u002B11je7/m\u002BXOuyzFtDhUgAAAABJRU5ErkJggg==",
               "WhenOpened": "2026-10-28T02:52:12.652Z",
               "EditorCaption": ""
